@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "C+H0hoeLEAU2qjhGh9zf7YNTzZOyqRyV8HR8eXFz8fYxyK2KZxl/n4yg7YLsZXycoxN2rgqgU2MXYCImH1zGnQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\texjh\\source\\repos\\StockProjectTest\\StockProjectTest\\StockProjectTest.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\texjh\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}
