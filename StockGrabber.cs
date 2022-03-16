@@ -28,6 +28,18 @@ namespace StockProjectTest
             Console.WriteLine("Open Price Today: " + temp.o);
             Console.WriteLine("Previous Close Price: " + temp.pc);
         }
+        public async Task refreshInfo(List<Stock> stocks)
+        {
+            HttpClient reader = new HttpClient();
+            foreach(Stock x in stocks)
+            {
+                string response = await reader.GetStringAsync("https://finnhub.io/api/v1/quote?symbol=" + x.symbol + "&token=" + Program.apiKey);
+                temp = JsonConvert.DeserializeObject<StockAvailable>(response);
+                x.value = temp.c * x.sharesOwned;
+            }
+            
+
+        }
         
         
         
