@@ -18,7 +18,6 @@ namespace StockProjectTest
         public float l = 0.0F; //Low Price of Day
         public float o = 0.0F; //Open Price of Day
         public float pc = 0.0F;//Previous Close Price
-        string Response;
 
         public StockAvailable()
         {

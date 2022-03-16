@@ -17,6 +17,7 @@ namespace StockProjectTest
         private double _balance;
         private double _portValue;
         private double _portGain;
+        private double _totalInvested;
         public List<Stock> stocksOwned = new List<Stock>();
 
         public string Name
@@ -55,12 +56,15 @@ namespace StockProjectTest
             }
         }
 
+        public double TotalInvested { get => _totalInvested; set => _totalInvested = value; }
+
         public Portfolio(string name, double balance)
         {
             Name = name;
             Balance = balance;
             PortValue = 0.00;
             PortGain = 0.00;
+            TotalInvested = balance;
         }
         public Portfolio()
         {
