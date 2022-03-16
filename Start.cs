@@ -177,6 +177,7 @@ namespace StockProjectTest
         }
         public static void portfolioOverview()
         {
+            updateStocks();
             Console.Clear();
             Console.WriteLine("Name: " + open.Name);
             Console.WriteLine("Balance Available: " + open.Balance);
@@ -268,6 +269,14 @@ namespace StockProjectTest
             }
 
 
+        }
+        public static void updateStocks()
+        {
+            StockGrabber finder = new StockGrabber();
+            Console.Clear();
+            Console.WriteLine("Please wait... Updating stock information");
+            finder.refreshInfo(open.stocksOwned);
+            System.Threading.Thread.Sleep(5000);
         }
 
     }
