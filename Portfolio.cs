@@ -18,9 +18,9 @@ namespace StockProjectTest
         private double _portValue;
         private double _portGain;
         private double _totalInvested;
-        public List<Stock> stocksOwned = new List<Stock>();
+        public List<Stock> stocksOwned = new List<Stock>(); //List of stocks that the user owns
 
-        public string Name
+        public string Name //An identifier for a unique portfolio
         {
             get { return _name; }
             set
@@ -29,7 +29,7 @@ namespace StockProjectTest
             }
         }
         
-        public double Balance
+        public double Balance //Amount the user has available to invest
         {
             get { return _balance; }
             set
@@ -38,7 +38,7 @@ namespace StockProjectTest
             }
         }
 
-        public double PortValue
+        public double PortValue //The current value of the users portfolio 
         {
             get { return _portValue; }
             set
@@ -47,7 +47,7 @@ namespace StockProjectTest
             }
         }
 
-        public double PortGain
+        public double PortGain //The net gain/loss of the users portfolio
         {
             get { return _portGain; }
             set
@@ -56,7 +56,7 @@ namespace StockProjectTest
             }
         }
 
-        public double TotalInvested { get => _totalInvested; set => _totalInvested = value; }
+        public double TotalInvested { get => _totalInvested; set => _totalInvested = value; } //The total amount of money the user has invested in stock
 
         public Portfolio(string name, double balance)
         {
