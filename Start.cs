@@ -282,8 +282,21 @@ namespace StockProjectTest
         public static void updateStocks()
         {
             StockGrabber finder = new StockGrabber();
+            List<Stock> temp = open.stocksOwned;
             Console.Clear();
             Console.WriteLine("Please wait... Updating stock information");
+            foreach(Stock x in open.stocksOwned)
+            {
+                foreach(Stock y in temp)
+                {
+                    if(x.symbol == y.symbol & x.sharesOwned != y.sharesOwned)
+                    {
+                        x.sharesOwned = x.sharesOwned + y.sharesOwned;
+                        y.sharesOwned = x.sharesOwned;
+                    }
+                }
+            }
+            open.stocksOwned = temp.GroupBy(x => x.symbol).Select(x => x.First()).ToList();
             finder.refreshInfo(open.stocksOwned);
             System.Threading.Thread.Sleep(5000);
             open.PortValue = 0.00;
