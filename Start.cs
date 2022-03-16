@@ -139,9 +139,10 @@ namespace StockProjectTest
             Console.Clear();
             Console.WriteLine("Welcome to the Dashboard!");
             Console.WriteLine("1. Find Stocks");
-            Console.WriteLine("2. View Portfolio");
-            Console.WriteLine("3. Save Portfolio");
-            Console.WriteLine("4. Return to Start");
+            Console.WriteLine("2. Add Money to Balance");
+            Console.WriteLine("3. View Portfolio");
+            Console.WriteLine("4. Save Portfolio");
+            Console.WriteLine("5. Return to Start");
             try
             {
                 int response = Convert.ToInt32(Console.ReadLine());
@@ -151,15 +152,19 @@ namespace StockProjectTest
                         searchStock();
                         break;
                     case 2:
+                        addBalance();
+                        break;
+
+                    case 3:
                         portfolioOverview();
                         break;
-                    case 3:
+                    case 4:
                         open.Save();
                         Console.WriteLine("Your file has been saved! Press any key to continue.");
                         Console.ReadLine();
                         Menu();
                         break;
-                    case 4:
+                    case 5:
                         Start();
                         break;
                     default:
@@ -277,6 +282,31 @@ namespace StockProjectTest
             Console.WriteLine("Please wait... Updating stock information");
             finder.refreshInfo(open.stocksOwned);
             System.Threading.Thread.Sleep(5000);
+        }
+        public static void addBalance()
+        {
+            Console.Clear();
+            Console.WriteLine("How much would you like to invest?");
+            Console.WriteLine(" ");
+            double response = 0.0;
+            try
+            {
+                response = Convert.ToDouble(Console.ReadLine());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Sorry, that's not a valid response. Press enter to try again");
+                Console.ReadLine();
+                addBalance();
+            }
+            open.Balance = open.Balance + response;
+            open.TotalInvested = open.TotalInvested + response;
+            Console.WriteLine("Successfully added {0} to your balance, your total balance is now {1}.", response, open.Balance);
+            Console.WriteLine("Press enter to go back to the dashboard");
+            Console.ReadLine();
+            Menu();
+
+
         }
 
     }
