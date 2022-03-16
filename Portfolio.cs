@@ -43,12 +43,7 @@ namespace StockProjectTest
             get { return _portValue; }
             set
             {
-                double y = 0;
-                foreach (Stock x in stocksOwned)
-                {
-                    y = y + x.value;
-                }
-                _portValue = y;
+                _portValue = value;
             }
         }
 

@@ -282,6 +282,11 @@ namespace StockProjectTest
             Console.WriteLine("Please wait... Updating stock information");
             finder.refreshInfo(open.stocksOwned);
             System.Threading.Thread.Sleep(5000);
+            foreach(Stock x in open.stocksOwned)
+            {
+                open.PortValue = open.PortValue + x.value;
+            }
+
         }
         public static void addBalance()
         {
