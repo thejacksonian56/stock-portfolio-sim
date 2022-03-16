@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace StockProjectTest
 {
-    public class StockAvailable
+    public class StockAvailable //A stock class that has all current information about the stock, usually pulled from the FinnHub api
     {
         public string symbol;
         public float c = 0.0F; //Current Price
@@ -28,11 +28,11 @@ namespace StockProjectTest
 
         
     }
-    public class Stock
+    public class Stock //Version of stock that only reflects the user's ownership of shares
     {
-        public string symbol;
-        public float value;
-        public float sharesOwned;
+        public string symbol; //The stock symbol, acts as an identifier
+        public float value; //Value of all the shares the user has in this stock
+        public float sharesOwned; //Amount of shares the user has in this stock
         public Stock(string syb, float val, float sha)
         {
             symbol = syb;

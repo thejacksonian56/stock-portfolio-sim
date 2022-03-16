@@ -134,7 +134,7 @@ namespace StockProjectTest
             Menu();
 
         }
-        public static void Menu()
+        public static void Menu() //Dashboard, the main hub for the program after a portfolio has been loaded
         {
             Console.Clear();
             Console.WriteLine("Welcome to the Dashboard!");
@@ -149,17 +149,17 @@ namespace StockProjectTest
                 switch (response)
                 {
                     case 1:
-                        searchStock();
+                        searchStock(); //See further down the file for functionality
                         break;
                     case 2:
-                        addBalance();
+                        addBalance(); //See further down the file for functionality
                         break;
 
                     case 3:
-                        portfolioOverview();
+                        portfolioOverview(); //See further down the file for functionality
                         break;
                     case 4:
-                        open.Save();
+                        open.Save(); //See Portfolio.cs for functionality
                         Console.WriteLine("Your file has been saved! Press any key to continue.");
                         Console.ReadLine();
                         Menu();
@@ -180,9 +180,9 @@ namespace StockProjectTest
                 Menu();
             }
         }
-        public static void portfolioOverview()
+        public static void portfolioOverview() //Updates stock/portfolio information and displays it
         {
-            updateStocks();
+            updateStocks(); //See further down the file for functionality
             Console.Clear();
             Console.WriteLine("Name: " + open.Name);
             Console.WriteLine("Balance Available: " + open.Balance);
@@ -203,14 +203,14 @@ namespace StockProjectTest
 
 
         }
-        public static void searchStock()
+        public static void searchStock() //Allows the user to search for stock by it's symbol, and buy shares from that stock
         {
             Console.Clear();
-            StockGrabber finder = new StockGrabber();
+            StockGrabber finder = new StockGrabber(); //See StockGrabber.cs for functionality
             Console.WriteLine("Enter the Symbol of the Stock That You Would Like to Check");
             Console.WriteLine();
             string response = Console.ReadLine();
-            finder.getInfo(response);
+            finder.getInfo(response); //See StockGrabber.cs for functionality
             System.Threading.Thread.Sleep(1000);
             Console.WriteLine();
             Console.WriteLine();
@@ -224,20 +224,20 @@ namespace StockProjectTest
                 case 1:
                     Console.WriteLine("How much money do you want to invest in this stock?");
                     float amount = float.Parse(Console.ReadLine());
-                    float shares = amount / finder.temp.c;
+                    float shares = amount / finder.temp.c; //Finds the amount of shares user can buy with the amount they want to invest
                     Console.WriteLine("You are about to buy {0} shares of {1} worth ${2}, Procede? Y or N", shares, finder.temp.symbol, amount);
                     Console.WriteLine();
                     char responseThree = Convert.ToChar(Console.ReadLine());
                     switch (responseThree)
                     {
                         case 'Y':
-                            if(amount <= open.Balance)
+                            if(amount <= open.Balance) //Checks to see if user has enough money to complete transaction
                             {
-                                open.Balance = open.Balance - amount;
-                                Stock test = new Stock(finder.temp.symbol, amount, shares);
-                                open.stocksOwned.Add(test);
-                                open.TotalInvested = open.TotalInvested + amount;
-                                open.Save();
+                                open.Balance = open.Balance - amount; //Removes money
+                                Stock test = new Stock(finder.temp.symbol, amount, shares); //Adds new stock to list of stocks owned
+                                open.stocksOwned.Add(test);                                 //
+                                open.TotalInvested = open.TotalInvested + amount; //Updates total amount invested
+                                open.Save(); //Saves portfolio information
                                 Console.WriteLine("Purchase successful! Returning to the dashboard.");
                                 Console.ReadLine();
                                 Menu();
@@ -247,18 +247,18 @@ namespace StockProjectTest
                                 Console.WriteLine("Sorry, you don't have enough money in your portfolio balance to buy this amount");
                                 Console.WriteLine("Consider adding more to your balance, selling stock, or buying less amount");
                                 Console.ReadLine();
-                                searchStock();
+                                Menu();
                             }
                             break;
                         case 'N':
-                            Console.WriteLine("Canceling... Press any key to return to the dashboard");
+                            Console.WriteLine("Canceling... Press enter to return to the dashboard");
                             Console.ReadLine();
                             Menu();
                             break;
                         default:
-                            Console.WriteLine("Not a valid selection, returning to stock search");
+                            Console.WriteLine("Not a valid selection, press enter to return to dashboard");
                             Console.ReadLine();
-                            searchStock();
+                            Menu();
                             break;
                     }
                     
@@ -279,12 +279,14 @@ namespace StockProjectTest
 
 
         }
-        public static void updateStocks()
+        public static void updateStocks() //Obtains updated portfolio information for stocks owned and updates them if changes are made, as well as clean up duplicates
         {
-            StockGrabber finder = new StockGrabber();
-            List<Stock> temp = open.stocksOwned;
+            StockGrabber finder = new StockGrabber(); //See StockGrabber.cs for functionality
+            List<Stock> temp = open.stocksOwned; //Creates duplication of the portfolio's list of stocks owned
             Console.Clear();
             Console.WriteLine("Please wait... Updating stock information");
+
+            //THe following loop compares stocks from the portfolio and the duplicate list created above, and merges the value of shares if they are different and listed under the same symbol
             foreach(Stock x in open.stocksOwned)
             {
                 foreach(Stock y in temp)
@@ -296,18 +298,18 @@ namespace StockProjectTest
                     }
                 }
             }
-            open.stocksOwned = temp.GroupBy(x => x.symbol).Select(x => x.First()).ToList();
-            finder.refreshInfo(open.stocksOwned);
-            System.Threading.Thread.Sleep(5000);
-            open.PortValue = 0.00;
+            open.stocksOwned = temp.GroupBy(x => x.symbol).Select(x => x.First()).ToList(); //Removes duplicate entries of stock under the same symbol now that the correct shares owned is reflected acordingly
+            finder.refreshInfo(open.stocksOwned); //See StockGrabber.cs for functionality
+            System.Threading.Thread.Sleep(5000); //Waits 5 secons for the above method to complete
+            open.PortValue = 0.00; //Sets the portfolio value to 0 to prevent the new value stacking ontop of the old one
             foreach(Stock x in open.stocksOwned)
             {
-                open.PortValue = open.PortValue + x.value;
+                open.PortValue = open.PortValue + x.value; //Adds up all the values of stocks owned for a total portfolio value
             }
-            open.PortGain = open.PortValue - open.TotalInvested;
+            open.PortGain = open.PortValue - open.TotalInvested; //Shows the difference between portfolio balance and amount invested
 
         }
-        public static void addBalance()
+        public static void addBalance() //Method to add balance to the portfolio
         {
             Console.Clear();
             Console.WriteLine("How much would you like to invest?");
@@ -315,18 +317,18 @@ namespace StockProjectTest
             double response = 0.0;
             try
             {
-                response = Convert.ToDouble(Console.ReadLine());
+                response = Convert.ToDouble(Console.ReadLine()); //Asks user how much they want to invest
             }
             catch (Exception)
             {
-                Console.WriteLine("Sorry, that's not a valid response. Press enter to try again");
+                Console.WriteLine("Sorry, that's not a valid response. Press enter to return to the dashboard");
                 Console.ReadLine();
-                addBalance();
+                Menu();
             }
-            open.Balance = open.Balance + response;
+            open.Balance = open.Balance + response; //Adds new money to the balance amount
             Console.WriteLine("Successfully added {0} to your balance, your total balance is now {1}.", response, open.Balance);
             Console.WriteLine("Press enter to go back to the dashboard");
-            open.Save();
+            open.Save(); //See portfilio.cs for functionality
             Console.ReadLine();
             Menu();
 
