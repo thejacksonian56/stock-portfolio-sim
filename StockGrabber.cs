@@ -12,20 +12,31 @@ namespace StockProjectTest
     public class StockGrabber
     {
 
+        public bool stockFound; //Becomes false if no information was able to be pulled
+
         public StockAvailable temp; //Temporary instance of StockAvailable for the use of methods below. See Stock.cs for attributes
         public async Task getInfo(string symb) //Task for pulling updated information on a specific stock through a stock symbol and the FinnHub API
         {
             HttpClient reader = new HttpClient(); 
             string _response = await reader.GetStringAsync("https://finnhub.io/api/v1/quote?symbol=" + symb + "&token=" + Program.apiKey); //Grabs data from the API using the symbol given at method called and key given at program startup
             StockAvailable temp = JsonConvert.DeserializeObject<StockAvailable>(_response); //Deserializes the data from the API and inserts it in the temp instance of StockAvailable. See Stock.cs for attributes
-            temp.symbol = symb; //Sets the symbol of temp to the symb string set at the calling of the method
-            Console.WriteLine("Current Price: " + temp.c);          //
-            Console.WriteLine("Change Today: " + temp.d);           //
-            Console.WriteLine("Percent Change: " + temp.dp + "%");  //
-            Console.WriteLine("High Price Today: " + temp.h);       //Prints out all the data pulled from the temp instance of StockAvailable.
-            Console.WriteLine("Low Price Today: " + temp.l);        //
-            Console.WriteLine("Open Price Today: " + temp.o);       //
-            Console.WriteLine("Previous Close Price: " + temp.pc);  //
+            if (temp != null)
+            {
+                stockFound = true;
+                temp.symbol = symb; //Sets the symbol of temp to the symb string set at the calling of the method
+                Console.WriteLine("Current Price: " + temp.c);          //
+                Console.WriteLine("Change Today: " + temp.d);           //
+                Console.WriteLine("Percent Change: " + temp.dp + "%");  //
+                Console.WriteLine("High Price Today: " + temp.h);       //Prints out all the data pulled from the temp instance of StockAvailable.
+                Console.WriteLine("Low Price Today: " + temp.l);        //
+                Console.WriteLine("Open Price Today: " + temp.o);       //
+                Console.WriteLine("Previous Close Price: " + temp.pc);  // 
+                Program.temp = temp;
+            }
+            else
+            {
+                stockFound = false;
+            }
         }
         public async Task refreshInfo(List<Stock> stocks) //Task for pulling information on all the stocks in a list of stocks and updating each stock's value of shares
         {
