@@ -13,6 +13,7 @@ namespace StockProjectTest
     {
         public static Portfolio open = new Portfolio();
         public static string apiKey;
+        public static StockAvailable temp = new StockAvailable();
         static void Main(string[] args)
         {
             //Console.WriteLine("Enter API Key from FinnHub.io: ");
@@ -23,54 +24,46 @@ namespace StockProjectTest
         }
         public static void Start()
         {
-            bool done = false; //Becomes true once a successful choice was made
-            do //Loops here if choice was not successful
+            Console.Clear();
+            Console.WriteLine("Welcome to Stock Simulator!");
+            Console.WriteLine();
+            Console.WriteLine("1. Open New Portfolio");
+            Console.WriteLine("2. View Existing Portfolio");
+            Console.WriteLine("3. Quit");
+            Console.WriteLine();
+            int selection = 0;
+            try
             {
-                Console.Clear();
-                Console.WriteLine("Welcome to Stock Simulator!");
-                Console.WriteLine();
-                Console.WriteLine("1. Open New Portfolio");
-                Console.WriteLine("2. View Existing Portfolio");
-                Console.WriteLine("3. Quit");
-                Console.WriteLine();
-                try //Prevents a choice outside of selections
-                {
-                    int slection = Convert.ToInt32(Console.ReadLine());
-                    if (slection == 1)
-                    {
-                        done = true;
-                        Console.Clear();
-                        newPortfolio(); //see further down in current file
-                    }
-                    else if (slection == 2)
-                    {
-                        done = true;
-                        Console.Clear();
-                        loadPortfolio(); //See further down in current file
-                    }
-                    else if (slection == 3)
-                    {
-                        done = true;
-                        Console.Clear();
-                        Console.WriteLine("Goodbye!");
-                        Console.ReadLine();
-                    }
-                    else //Occurs if response is an int bty
-                    {
-                        Console.WriteLine("Sorry, that's not a valid selection!");
-                        Console.ReadLine();
-
-                    }
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("Sorrry, that's not a valid selection!");
+                selection = Convert.ToInt32(Console.ReadLine());    //Asks user for input
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Sorry, that's not a valid selection. Press enter to try again");
+                Console.ReadLine();
+                Start();
+            }
+            switch (selection)  //Brings user to their deaired menu, or gives them a goodbye message if they wish to quit. Will loop back to method call if invalid selection is made
+            {
+                case 1:
+                    newPortfolio();
+                    break;
+                case 2:
+                    loadPortfolio();
+                    break;
+                case 3:
+                    Console.WriteLine("Good bye!");
+                    break;
+                default:
+                    Console.WriteLine("Sorry, that's not a valid selection. Press enter to try again");
                     Console.ReadLine();
-                }
-            } while (done == false); //Checks to see if a valid choice was made or not
+                    Start();
+                    break;
+            }
+
         }
         static void newPortfolio() //Method that makes a new Portfolio Class and saves it
         {
+            Console.Clear();
             string name = ""; //Starting string, later will be transfered to new class Portfolio
             double balance = 0.00; //Starting double, later will be transfered to new class Portfolio 
             bool validName=false; //Becomes true if making a name didn't cause an error
@@ -112,7 +105,7 @@ namespace StockProjectTest
                     }
                 } while (validBalance == false);
             } while (validName == false && validBalance == false); //Checks both name and balance for errors. Probably redundent but haven't tested yet
-            Portfolio open = new Portfolio(name, balance); //Creates new Portfolio Class. See Portfolio.cs
+            open = new Portfolio(name, balance); //Creates new Portfolio Class. See Portfolio.cs
             open.Save(); //Saves new Portfolio class to a .xml document located in /MyDocuments/(name).xml -- See Portfolio.cs for more information
             Console.WriteLine("Congradulations! Your Portfolio has been created and saved!");
             Console.WriteLine("Press any key to continue to the dashboard");
@@ -121,13 +114,23 @@ namespace StockProjectTest
         }
         public static void loadPortfolio() //Method to load 
         {
+            Console.Clear();
             Console.WriteLine("Please enter your portfolio name: ");
-            string response = Console.ReadLine();
-            XmlSerializer reader = new XmlSerializer(typeof(Portfolio));
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "//StockSimulator" + response + ".xml"; //Sets path to default save location with filename given by user response
-            System.IO.StreamReader file = new System.IO.StreamReader(path); //Reads save file
-            open = (Portfolio)reader.Deserialize(file); //Loads the save file information into the portfolio 
-            file.Close();
+            try
+            {
+                string response = Console.ReadLine();
+                XmlSerializer reader = new XmlSerializer(typeof(Portfolio));
+                var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "//StockSimulator" + response + ".xml"; //Sets path to default save location with filename given by user response
+                System.IO.StreamReader file = new System.IO.StreamReader(path); //Reads save file
+                open = (Portfolio)reader.Deserialize(file); //Loads the save file information into the portfolio 
+                file.Close();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Sorry, a save file with that name couldn't be found. Press enter to return to the menu.");
+                Console.ReadLine();
+                Start();
+            }
             Console.WriteLine("File Loaded Successfully");
             Console.WriteLine("Press any key to return to the dashboard");
             Console.ReadLine();
@@ -211,21 +214,30 @@ namespace StockProjectTest
             Console.WriteLine();
             string response = Console.ReadLine();
             finder.getInfo(response); //See StockGrabber.cs for functionality
-            System.Threading.Thread.Sleep(1000);
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("What would you like to do next?");
-            Console.WriteLine("1. Buy Shares");
-            Console.WriteLine("2. Search Another Stock");
-            Console.WriteLine("3. Go back");
+            System.Threading.Thread.Sleep(1500); //Waits for 1.5 seconds, allows for above task to finish
+            if (finder.stockFound == true) //Checks to see if the method returned in no stock information being pulled
+            {
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("What would you like to do next?");
+                Console.WriteLine("1. Buy Shares");
+                Console.WriteLine("2. Search Another Stock");
+                Console.WriteLine("3. Go back");
+            }
+            else
+            {
+                Console.WriteLine("Sorry, no data for that symbol entry could be found. Press enter to return to the dashboard");
+                Console.ReadLine();
+                Menu();
+            }
             int responseTwo = Convert.ToInt32(Console.ReadLine());
             switch (responseTwo)
             {
                 case 1:
                     Console.WriteLine("How much money do you want to invest in this stock?");
                     float amount = float.Parse(Console.ReadLine());
-                    float shares = amount / finder.temp.c; //Finds the amount of shares user can buy with the amount they want to invest
-                    Console.WriteLine("You are about to buy {0} shares of {1} worth ${2}, Procede? Y or N", shares, finder.temp.symbol, amount);
+                    float shares = amount / temp.c; //Finds the amount of shares user can buy with the amount they want to invest
+                    Console.WriteLine("You are about to buy {0} shares of {1} worth ${2}, Procede? Y or N", shares, temp.symbol, amount);
                     Console.WriteLine();
                     char responseThree = Convert.ToChar(Console.ReadLine());
                     switch (responseThree)
@@ -234,7 +246,7 @@ namespace StockProjectTest
                             if(amount <= open.Balance) //Checks to see if user has enough money to complete transaction
                             {
                                 open.Balance = open.Balance - amount; //Removes money
-                                Stock test = new Stock(finder.temp.symbol, amount, shares); //Adds new stock to list of stocks owned
+                                Stock test = new Stock(temp.symbol, amount, shares); //Adds new stock to list of stocks owned
                                 open.stocksOwned.Add(test);                                 //
                                 open.TotalInvested = open.TotalInvested + amount; //Updates total amount invested
                                 open.Save(); //Saves portfolio information
