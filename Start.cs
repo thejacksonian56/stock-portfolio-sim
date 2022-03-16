@@ -186,6 +186,7 @@ namespace StockProjectTest
             Console.Clear();
             Console.WriteLine("Name: " + open.Name);
             Console.WriteLine("Balance Available: " + open.Balance);
+            Console.WriteLine("Total Amount Invested: " + open.TotalInvested);
             Console.WriteLine("Portfolio Worth: " + open.PortValue);
             Console.WriteLine("Portfolio Gain: " + open.PortGain);
             Console.WriteLine("Stocks Owned: ");
@@ -196,6 +197,7 @@ namespace StockProjectTest
             }
             Console.WriteLine(" ");
             Console.WriteLine("Press any key to return to the dashboard");
+            open.Save();
             Console.ReadLine();
             Menu();
 
@@ -234,6 +236,8 @@ namespace StockProjectTest
                                 open.Balance = open.Balance - amount;
                                 Stock test = new Stock(finder.temp.symbol, amount, shares);
                                 open.stocksOwned.Add(test);
+                                open.TotalInvested = open.TotalInvested + amount;
+                                open.Save();
                                 Console.WriteLine("Purchase successful! Returning to the dashboard.");
                                 Console.ReadLine();
                                 Menu();
@@ -282,10 +286,12 @@ namespace StockProjectTest
             Console.WriteLine("Please wait... Updating stock information");
             finder.refreshInfo(open.stocksOwned);
             System.Threading.Thread.Sleep(5000);
+            open.PortValue = 0.00;
             foreach(Stock x in open.stocksOwned)
             {
                 open.PortValue = open.PortValue + x.value;
             }
+            open.PortGain = open.PortValue - open.TotalInvested;
 
         }
         public static void addBalance()
@@ -305,9 +311,9 @@ namespace StockProjectTest
                 addBalance();
             }
             open.Balance = open.Balance + response;
-            open.TotalInvested = open.TotalInvested + response;
             Console.WriteLine("Successfully added {0} to your balance, your total balance is now {1}.", response, open.Balance);
             Console.WriteLine("Press enter to go back to the dashboard");
+            open.Save();
             Console.ReadLine();
             Menu();
 

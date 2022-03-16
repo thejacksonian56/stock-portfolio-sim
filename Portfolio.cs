@@ -64,7 +64,7 @@ namespace StockProjectTest
             Balance = balance;
             PortValue = 0.00;
             PortGain = 0.00;
-            TotalInvested = balance;
+            TotalInvested = 0.00;
         }
         public Portfolio()
         {
