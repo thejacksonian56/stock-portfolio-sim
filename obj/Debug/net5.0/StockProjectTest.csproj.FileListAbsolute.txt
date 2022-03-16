@@ -15,4 +15,3 @@ C:\Users\texjh\source\repos\StockProjectTest\StockProjectTest\obj\Debug\net5.0\S
 C:\Users\texjh\source\repos\StockProjectTest\StockProjectTest\obj\Debug\net5.0\StockProjectTest.genruntimeconfig.cache
 C:\Users\texjh\source\repos\StockProjectTest\StockProjectTest\bin\Debug\net5.0\Newtonsoft.Json.dll
 C:\Users\texjh\source\repos\StockProjectTest\StockProjectTest\obj\Debug\net5.0\StockProjectTest.csproj.CopyComplete
-C:\Users\texjh\source\repos\StockProjectTest\StockProjectTest\obj\Debug\net5.0\StockProjectTest.csproj.AssemblyReference.cache
