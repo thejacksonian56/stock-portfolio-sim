@@ -34,12 +34,16 @@ namespace StockProjectTest
         public float value; //Value of all the shares the user has in this stock
         public float sharesOwned; //Amount of shares the user has in this stock
         public float valueAtPurchase; //Value of the shares at purchase
+        public float sharePrice;
+        public float sharePriceAtPurchase;
+        public float gain;
         public Stock(string syb, float val, float sha)
         {
             symbol = syb;
             value = val;
             sharesOwned = sha;
             valueAtPurchase = val;
+
             
         }
         public Stock()

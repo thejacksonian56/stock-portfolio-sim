@@ -191,9 +191,8 @@ namespace StockProjectTest
             Console.WriteLine("Balance Available: " + open.Balance);
             Console.WriteLine("Total Amount Invested: " + open.TotalInvested);
             Console.WriteLine("Portfolio Worth: " + open.PortValue);
-            //Console.WriteLine("Portfolio Gain: " + open.PortGain);
             Console.Write("Portfolio Gain: ");
-            if(open.PortGain > 0)
+            if(open.PortGain > 0) //< -----Checks to see if growth is positive or negative
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write(open.PortGain);
@@ -212,25 +211,41 @@ namespace StockProjectTest
             foreach (Stock x in open.stocksOwned)
             {
                 Console.Write("Stock {0}, Shares: {1}, Value: {2}, Amount Invested: {3}, Gain: ",x.symbol, x.sharesOwned, x.value, x.valueAtPurchase);
-                if(x.value - x.valueAtPurchase > 0)
+                if(x.gain > 0) //< -----Checks to see if growth is positive or negative
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write(x.value - x.valueAtPurchase);
+                    Console.Write(x.gain);
                     Console.ResetColor();
                     Console.WriteLine();
                 }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(x.value - x.valueAtPurchase);
+                    Console.Write(x.gain);
                     Console.ResetColor();
                     Console.WriteLine();
                 }
             }
-            Console.WriteLine(" ");
-            Console.WriteLine("Press any key to return to the dashboard");
             open.Save();
-            Console.ReadLine();
+            Console.WriteLine(" ");
+            Console.WriteLine("Select an option: 1. Sell Stock  2. Refresh  3. Return to dashboard");
+            int response = Convert.ToInt32(Console.ReadLine());
+            switch (response){
+                case 1:
+                    sellStock();
+                    break;
+                case 2:
+                    portfolioOverview();
+                    break;
+                case 3:
+                    Menu();
+                    break;
+                default:
+                    Console.WriteLine("Sorry, that's not a valid response. Press enter to refresh");
+                    Console.ReadLine();
+                    portfolioOverview();
+                    break;
+            }
             Menu();
 
 
@@ -276,8 +291,8 @@ namespace StockProjectTest
                             {
                                 open.Balance = open.Balance - amount; //Removes money
                                 Stock test = new Stock(temp.symbol, amount, shares); //Adds new stock to list of stocks owned
-                                open.stocksOwned.Add(test);                                 //
-                                open.TotalInvested = open.TotalInvested + amount; //Updates total amount invested
+                                test.sharePriceAtPurchase = temp.c;
+                                open.stocksOwned.Add(test);                                
                                 open.Save(); //Saves portfolio information
                                 Console.WriteLine("Purchase successful! Returning to the dashboard.");
                                 Console.ReadLine();
@@ -327,27 +342,37 @@ namespace StockProjectTest
             Console.Clear();
             Console.WriteLine("Please wait... Updating stock information");
 
-            //THe following loop compares stocks from the portfolio and the duplicate list created above, and merges the value of shares if they are different and listed under the same symbol
+           
             foreach(Stock x in open.stocksOwned)
             {
-                foreach(Stock y in temp)
+                foreach(Stock y in temp) //THe following loop compares stocks from the portfolio and the duplicate list created above, and merges the value of shares if they are different and listed under the same symbol
                 {
                     if(x.symbol == y.symbol & x.sharesOwned != y.sharesOwned)
                     {
                         x.sharesOwned = x.sharesOwned + y.sharesOwned;
+                        x.sharePriceAtPurchase = (x.sharePriceAtPurchase + y.sharePriceAtPurchase) / 2;
+                        y.sharePriceAtPurchase = x.sharePriceAtPurchase;
                         y.sharesOwned = x.sharesOwned;
                     }
+                }
+                if(x.sharesOwned == 0)  //This loop removes stocks if they have no shares owned
+                {
+                    open.stocksOwned.Remove(x);
                 }
             }
             open.stocksOwned = temp.GroupBy(x => x.symbol).Select(x => x.First()).ToList(); //Removes duplicate entries of stock under the same symbol now that the correct shares owned is reflected acordingly
             finder.refreshInfo(open.stocksOwned); //See StockGrabber.cs for functionality
             System.Threading.Thread.Sleep(5000); //Waits 5 secons for the above method to complete
             open.PortValue = 0.00; //Sets the portfolio value to 0 to prevent the new value stacking ontop of the old one
+            open.PortGain = 0.00;
+            open.TotalInvested = 0.00;
             foreach(Stock x in open.stocksOwned)
             {
                 open.PortValue = open.PortValue + x.value; //Adds up all the values of stocks owned for a total portfolio value
+                x.gain = (x.sharePrice - x.sharePriceAtPurchase) * x.sharesOwned;
+                open.PortGain = open.PortGain + x.gain;
+                open.TotalInvested = open.TotalInvested + (x.sharesOwned * x.sharePriceAtPurchase);
             }
-            open.PortGain = open.PortValue - open.TotalInvested; //Shows the difference between portfolio balance and amount invested
 
         }
         public static void addBalance() //Method to add balance to the portfolio
@@ -374,6 +399,57 @@ namespace StockProjectTest
             Menu();
 
 
+        }
+        public static void sellStock()
+        {
+            Console.WriteLine("Enter the symbol of the stock you want to sell");
+            string response = Console.ReadLine();
+            foreach(Stock x in open.stocksOwned)
+            {
+                if (x.symbol == response)
+                {
+                    Console.WriteLine("How much would you like to sell? ($)");
+                    float sellPrice = float.Parse(Console.ReadLine());
+                    if (x.value >= sellPrice)
+                    {
+                        float sellRatio = sellPrice / x.value;
+                        float sellShares = x.sharesOwned * sellRatio;
+                        float remainingShares = x.sharesOwned - sellShares;
+                        Console.WriteLine("You are about to sell {0}$ worth of {1} stock. You will have {2} shares left after this transaction. Continue? Y or N", sellPrice, x.symbol, remainingShares);
+                        char resp = Convert.ToChar(Console.ReadLine());
+                        switch (resp)
+                        {
+                            case 'Y':
+                                Console.Clear();
+                                open.Balance = open.Balance + sellPrice;
+                                x.sharesOwned = remainingShares;
+                                Console.WriteLine("Transaction complete! Press enter to return to dashboard");
+                                Console.ReadLine();
+                                Menu();
+                                break;
+                            case 'N':
+                                Console.Clear();
+                                Console.WriteLine("Transaction canceled: Press enter to return to dashboard");
+                                Console.ReadLine();
+                                Menu();
+                                break;
+                            default:
+                                Console.Clear();
+                                Console.WriteLine("Sorry, that's not a valid response. Press enter to return to dashboard");
+                                Console.ReadLine();
+                                Menu();
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Sorry, you don't have that much to sell... Press enter to continue");
+                        Console.ReadLine();
+                        portfolioOverview();
+                    }
+
+                }
+            }
         }
 
     }
