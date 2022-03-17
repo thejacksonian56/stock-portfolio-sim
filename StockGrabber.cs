@@ -24,28 +24,28 @@ namespace StockProjectTest
             {
                 stockFound = true;
                 temp.symbol = symb; //Sets the symbol of temp to the symb string set at the calling of the method
-                Console.WriteLine("Current Price: " + temp.c);        ////
-                Console.WriteLine("Change Today: " + temp.d);           //
-                Console.Write("Percent Change: ");                      //
-                if(temp.dp > 0)                                         //<-----Checks to see if growth is positive or negative
-                {                                                       //
-                    Console.ForegroundColor = ConsoleColor.Green;       //
-                    Console.Write(temp.dp + "%");                       //
-                    Console.ResetColor();                               //
-                    Console.WriteLine();                                //
-                }                                                       //  
-                else                                                    //Prints out all the data pulled from the temp instance of StockAvailable.
-                {                                                       //
-                    Console.ForegroundColor = ConsoleColor.Red;         //
-                    Console.Write(temp.dp + "%");                       //
-                    Console.ResetColor();                               //  
-                    Console.WriteLine();                                //
-                }                                                       //
-                                                                        //
-                Console.WriteLine("High Price Today: " + temp.h);       //
-                Console.WriteLine("Low Price Today: " + temp.l);        //
-                Console.WriteLine("Open Price Today: " + temp.o);       //
-                Console.WriteLine("Previous Close Price: " + temp.pc);//// 
+                Console.WriteLine("Current Price: " + Math.Round(temp.c, 2));          ////
+                Console.WriteLine("Change Today: " + Math.Round(temp.d, 2));             //
+                Console.Write("Percent Change: ");                                       //
+                if(temp.dp > 0)                                                          //<-----Checks to see if growth is positive or negative
+                {                                                                        //
+                    Console.ForegroundColor = ConsoleColor.Green;                        //
+                    Console.Write(temp.dp + "%");                                        //
+                    Console.ResetColor();                                                //
+                    Console.WriteLine();                                                 //
+                }                                                                        //  
+                else                                                                     //-Prints out all the data pulled from the temp instance of StockAvailable.
+                {                                                                        //
+                    Console.ForegroundColor = ConsoleColor.Red;                          //
+                    Console.Write(temp.dp + "%");                                        //
+                    Console.ResetColor();                                                //  
+                    Console.WriteLine();                                                 //
+                }                                                                        //
+                                                                                         //
+                Console.WriteLine("High Price Today: " + Math.Round(temp.h, 2));         //
+                Console.WriteLine("Low Price Today: " + Math.Round(temp.l, 2));          //
+                Console.WriteLine("Open Price Today: " + Math.Round(temp.o, 2));         //
+                Console.WriteLine("Previous Close Price: " + Math.Round(temp.pc));     //// 
                 Program.temp = temp;
             }
             else
