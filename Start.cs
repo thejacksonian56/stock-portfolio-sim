@@ -51,7 +51,9 @@ namespace StockProjectTest
                     loadPortfolio();
                     break;
                 case 3:
-                    Console.WriteLine("Good bye!");
+                    Console.WriteLine("Good Bye!");
+                    Console.ReadLine();
+                    Environment.Exit(0);
                     break;
                 default:
                     Console.WriteLine("Sorry, that's not a valid selection. Press enter to try again (default)");
@@ -110,7 +112,7 @@ namespace StockProjectTest
             Console.WriteLine("Congradulations! Your Portfolio has been created and saved!");
             Console.WriteLine("Press any key to continue to the dashboard");
             Console.ReadLine();
-            Menu();
+            portfolioOverview();
         }
         public static void loadPortfolio() //Method to load 
         {
@@ -134,75 +136,29 @@ namespace StockProjectTest
             Console.WriteLine("File Loaded Successfully");
             Console.WriteLine("Press any key to return to the dashboard");
             Console.ReadLine();
-            Menu();
+            portfolioOverview();
 
-        }
-        public static void Menu() //Dashboard, the main hub for the program after a portfolio has been loaded
-        {
-            Console.Clear();
-            Console.WriteLine("Welcome to the Dashboard!");
-            Console.WriteLine("1. Find Stocks");
-            Console.WriteLine("2. Add Money to Balance");
-            Console.WriteLine("3. View Portfolio");
-            Console.WriteLine("4. Save Portfolio");
-            Console.WriteLine("5. Return to Start");
-            try
-            {
-                int response = Convert.ToInt32(Console.ReadLine());
-                switch (response)
-                {
-                    case 1:
-                        searchStock(); //See further down the file for functionality
-                        break;
-                    case 2:
-                        addBalance(); //See further down the file for functionality
-                        break;
-
-                    case 3:
-                        portfolioOverview(); //See further down the file for functionality
-                        break;
-                    case 4:
-                        open.Save(); //See Portfolio.cs for functionality
-                        Console.WriteLine("Your file has been saved! Press any key to continue.");
-                        Console.ReadLine();
-                        Menu();
-                        break;
-                    case 5:
-                        Start();
-                        break;
-                    default:
-                        Console.WriteLine("Sorry, that's not a valid selection! Press any key to continue (dash1)");
-                        Console.ReadLine();
-                        break;
-                }
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Sorry, that's not a vald selection!! Press any key to continue(dash2)");
-                Console.ReadLine();
-                Menu();
-            }
         }
         public static void portfolioOverview() //Updates stock/portfolio information and displays it
         {
             updateStocks(); //See further down the file for functionality
             Console.Clear();
             Console.WriteLine("Name: " + open.Name);
-            Console.WriteLine("Balance Available: " + open.Balance);
-            Console.WriteLine("Total Amount Invested: " + open.TotalInvested);
-            Console.WriteLine("Portfolio Worth: " + open.PortValue);
+            Console.WriteLine("Balance Available: " + Math.Round(open.Balance, 2));
+            Console.WriteLine("Total Amount Invested: " + Math.Round(open.TotalInvested, 2));
+            Console.WriteLine("Portfolio Worth: " + Math.Round(open.PortValue, 2));
             Console.Write("Portfolio Gain: ");
             if(open.PortGain > 0) //< -----Checks to see if growth is positive or negative
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write(open.PortGain);
+                Console.Write(Math.Round(open.PortGain, 2));
                 Console.ResetColor();
                 Console.WriteLine();
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write(open.PortGain);
+                Console.Write(Math.Round(open.PortGain, 2));
                 Console.ResetColor();
                 Console.WriteLine();
             }
@@ -210,43 +166,53 @@ namespace StockProjectTest
             Console.WriteLine(" ");
             foreach (Stock x in open.stocksOwned)
             {
-                Console.Write("Stock {0}, Shares: {1}, Value: {2}, Amount Invested: {3}, Gain: ",x.symbol, x.sharesOwned, x.value, x.valueAtPurchase);
+                Console.Write("Stock {0}, Shares: {1}, Value: {2}, Amount Invested: {3}, Gain: ",x.symbol, x.sharesOwned, Math.Round(x.value, 2), Math.Round(x.valueAtPurchase, 2));
                 if(x.gain > 0) //< -----Checks to see if growth is positive or negative
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write(x.gain);
+                    Console.Write(Math.Round(x.gain, 2));
                     Console.ResetColor();
                     Console.WriteLine();
                 }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(x.gain);
+                    Console.Write(Math.Round(x.gain, 2));
                     Console.ResetColor();
                     Console.WriteLine();
                 }
             }
             open.Save();
             Console.WriteLine(" ");
-            Console.WriteLine("Select an option: 1. Sell Stock  2. Refresh  3. Return to dashboard");
-            int response = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Select an option: 1. Buy Stock  2. Sell Stock  3. Add to Balance  4. Refresh 5. Return to Start");
+            int response = 0;
+            try
+            {
+                response = Convert.ToInt32(Console.ReadLine());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Not a valid response! Press enter to refresh");
+                Console.ReadLine();
+            }
             switch (response){
                 case 1:
-                    sellStock();
+                    searchStock();
                     break;
                 case 2:
-                    portfolioOverview();
+                    sellStock();
                     break;
                 case 3:
-                    Menu();
+                    addBalance();
                     break;
-                default:
-                    Console.WriteLine("Sorry, that's not a valid response. Press enter to refresh");
-                    Console.ReadLine();
+                case 4:
                     portfolioOverview();
                     break;
+                case 5:
+                    Start();
+                    break;
             }
-            Menu();
+            portfolioOverview();
 
 
         }
@@ -258,7 +224,7 @@ namespace StockProjectTest
             Console.WriteLine();
             string response = Console.ReadLine();
             finder.getInfo(response); //See StockGrabber.cs for functionality
-            System.Threading.Thread.Sleep(1500); //Waits for 1.5 seconds, allows for above task to finish
+            System.Threading.Thread.Sleep(100); //Waits for 1.5 seconds, allows for above task to finish
             if (finder.stockFound == true) //Checks to see if the method returned in no stock information being pulled
             {
                 Console.WriteLine();
@@ -272,7 +238,7 @@ namespace StockProjectTest
             {
                 Console.WriteLine("Sorry, no data for that symbol entry could be found. Press enter to return to the dashboard");
                 Console.ReadLine();
-                Menu();
+                portfolioOverview();
             }
             int responseTwo = Convert.ToInt32(Console.ReadLine());
             switch (responseTwo)
@@ -296,25 +262,25 @@ namespace StockProjectTest
                                 open.Save(); //Saves portfolio information
                                 Console.WriteLine("Purchase successful! Returning to the dashboard.");
                                 Console.ReadLine();
-                                Menu();
+                                portfolioOverview();
                             }
                             else
                             {
                                 Console.WriteLine("Sorry, you don't have enough money in your portfolio balance to buy this amount");
                                 Console.WriteLine("Consider adding more to your balance, selling stock, or buying less amount");
                                 Console.ReadLine();
-                                Menu();
+                                portfolioOverview();
                             }
                             break;
                         case 'N':
                             Console.WriteLine("Canceling... Press enter to return to the dashboard");
                             Console.ReadLine();
-                            Menu();
+                            portfolioOverview();
                             break;
                         default:
                             Console.WriteLine("Not a valid selection, press enter to return to dashboard");
                             Console.ReadLine();
-                            Menu();
+                            portfolioOverview();
                             break;
                     }
                     
@@ -323,7 +289,7 @@ namespace StockProjectTest
                     searchStock();
                     break;
                 case 3:
-                    Menu();
+                    portfolioOverview();
                     break;
                 default:
                     Console.WriteLine("Sorry, Not a valid Response!!");
@@ -371,7 +337,8 @@ namespace StockProjectTest
                 open.PortValue = open.PortValue + x.value; //Adds up all the values of stocks owned for a total portfolio value
                 x.gain = (x.sharePrice - x.sharePriceAtPurchase) * x.sharesOwned;
                 open.PortGain = open.PortGain + x.gain;
-                open.TotalInvested = open.TotalInvested + (x.sharesOwned * x.sharePriceAtPurchase);
+                x.valueAtPurchase = x.sharesOwned * x.sharePriceAtPurchase;
+                open.TotalInvested = open.TotalInvested + x.valueAtPurchase;
             }
 
         }
@@ -389,14 +356,14 @@ namespace StockProjectTest
             {
                 Console.WriteLine("Sorry, that's not a valid response. Press enter to return to the dashboard");
                 Console.ReadLine();
-                Menu();
+                portfolioOverview();
             }
             open.Balance = open.Balance + response; //Adds new money to the balance amount
             Console.WriteLine("Successfully added {0} to your balance, your total balance is now {1}.", response, open.Balance);
             Console.WriteLine("Press enter to go back to the dashboard");
             open.Save(); //See portfilio.cs for functionality
             Console.ReadLine();
-            Menu();
+            portfolioOverview();
 
 
         }
@@ -425,19 +392,19 @@ namespace StockProjectTest
                                 x.sharesOwned = remainingShares;
                                 Console.WriteLine("Transaction complete! Press enter to return to dashboard");
                                 Console.ReadLine();
-                                Menu();
+                                portfolioOverview();
                                 break;
                             case 'N':
                                 Console.Clear();
                                 Console.WriteLine("Transaction canceled: Press enter to return to dashboard");
                                 Console.ReadLine();
-                                Menu();
+                                portfolioOverview();
                                 break;
                             default:
                                 Console.Clear();
                                 Console.WriteLine("Sorry, that's not a valid response. Press enter to return to dashboard");
                                 Console.ReadLine();
-                                Menu();
+                                portfolioOverview();
                                 break;
                         }
                     }
