@@ -191,12 +191,41 @@ namespace StockProjectTest
             Console.WriteLine("Balance Available: " + open.Balance);
             Console.WriteLine("Total Amount Invested: " + open.TotalInvested);
             Console.WriteLine("Portfolio Worth: " + open.PortValue);
-            Console.WriteLine("Portfolio Gain: " + open.PortGain);
+            //Console.WriteLine("Portfolio Gain: " + open.PortGain);
+            Console.Write("Portfolio Gain: ");
+            if(open.PortGain > 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write(open.PortGain);
+                Console.ResetColor();
+                Console.WriteLine();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write(open.PortGain);
+                Console.ResetColor();
+                Console.WriteLine();
+            }
             Console.WriteLine("Stocks Owned: ");
             Console.WriteLine(" ");
             foreach (Stock x in open.stocksOwned)
             {
-                Console.WriteLine("Stock {0}, Shares: {1}, Value: {2}, Amount Invested: {3}, Gain: {4}",x.symbol, x.sharesOwned, x.value, x.valueAtPurchase, x.value - x.valueAtPurchase);
+                Console.Write("Stock {0}, Shares: {1}, Value: {2}, Amount Invested: {3}, Gain: ",x.symbol, x.sharesOwned, x.value, x.valueAtPurchase);
+                if(x.value - x.valueAtPurchase > 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(x.value - x.valueAtPurchase);
+                    Console.ResetColor();
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(x.value - x.valueAtPurchase);
+                    Console.ResetColor();
+                    Console.WriteLine();
+                }
             }
             Console.WriteLine(" ");
             Console.WriteLine("Press any key to return to the dashboard");

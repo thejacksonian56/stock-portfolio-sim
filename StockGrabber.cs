@@ -26,7 +26,22 @@ namespace StockProjectTest
                 temp.symbol = symb; //Sets the symbol of temp to the symb string set at the calling of the method
                 Console.WriteLine("Current Price: " + temp.c);          //
                 Console.WriteLine("Change Today: " + temp.d);           //
-                Console.WriteLine("Percent Change: " + temp.dp + "%");  //
+                Console.Write("Percent Change: ");
+                if(temp.dp > 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(temp.dp + "%");
+                    Console.ResetColor();
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(temp.dp + "%");
+                    Console.ResetColor();
+                    Console.WriteLine();
+                }
+
                 Console.WriteLine("High Price Today: " + temp.h);       //Prints out all the data pulled from the temp instance of StockAvailable.
                 Console.WriteLine("Low Price Today: " + temp.l);        //
                 Console.WriteLine("Open Price Today: " + temp.o);       //
