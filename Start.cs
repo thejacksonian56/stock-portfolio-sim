@@ -38,7 +38,7 @@ namespace StockProjectTest
             }
             catch (Exception)
             {
-                Console.WriteLine("Sorry, that's not a valid selection. Press enter to try again");
+                Console.WriteLine("Sorry, that's not a valid selection. Press enter to try again (start)");
                 Console.ReadLine();
                 Start();
             }
@@ -54,7 +54,7 @@ namespace StockProjectTest
                     Console.WriteLine("Good bye!");
                     break;
                 default:
-                    Console.WriteLine("Sorry, that's not a valid selection. Press enter to try again");
+                    Console.WriteLine("Sorry, that's not a valid selection. Press enter to try again (default)");
                     Console.ReadLine();
                     Start();
                     break;
@@ -171,14 +171,14 @@ namespace StockProjectTest
                         Start();
                         break;
                     default:
-                        Console.WriteLine("Sorry, that's not a valid selection! Press any key to continue");
+                        Console.WriteLine("Sorry, that's not a valid selection! Press any key to continue (dash1)");
                         Console.ReadLine();
                         break;
                 }
             }
             catch (Exception)
             {
-                Console.WriteLine("Sorry, that's not a vald selection!! Press any key to continue");
+                Console.WriteLine("Sorry, that's not a vald selection!! Press any key to continue(dash2)");
                 Console.ReadLine();
                 Menu();
             }
@@ -196,7 +196,7 @@ namespace StockProjectTest
             Console.WriteLine(" ");
             foreach (Stock x in open.stocksOwned)
             {
-                Console.WriteLine("Stock {0}, Shares: {1}, Value: {2}",x.symbol, x.sharesOwned, x.value);
+                Console.WriteLine("Stock {0}, Shares: {1}, Value: {2}, Amount Invested: {3}, Gain: {4}",x.symbol, x.sharesOwned, x.value, x.valueAtPurchase, x.value - x.valueAtPurchase);
             }
             Console.WriteLine(" ");
             Console.WriteLine("Press any key to return to the dashboard");

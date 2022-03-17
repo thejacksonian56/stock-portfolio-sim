@@ -33,11 +33,14 @@ namespace StockProjectTest
         public string symbol; //The stock symbol, acts as an identifier
         public float value; //Value of all the shares the user has in this stock
         public float sharesOwned; //Amount of shares the user has in this stock
+        public float valueAtPurchase; //Value of the shares at purchase
         public Stock(string syb, float val, float sha)
         {
             symbol = syb;
             value = val;
             sharesOwned = sha;
+            valueAtPurchase = val;
+            
         }
         public Stock()
         {
