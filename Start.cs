@@ -14,15 +14,15 @@ namespace StockProjectTest
         public static Portfolio open = new Portfolio();
         public static string apiKey;
         public static StockAvailable temp = new StockAvailable();
-        static void Main(string[] args)
+        static void Main(string[] args) //Program start
         {
             //Console.WriteLine("Enter API Key from FinnHub.io: ");
             apiKey = "c8npoj2ad3iep4jec1lg"; //Temporary for testing, final product will ask user for own key
             Start();
             
             
-        }
-        public static void Start()
+        } 
+        public static void Start() //The opening menu for the program once the API key is inserted
         {
             Console.Clear();
             Console.WriteLine("Welcome to Stock Simulator!");
@@ -62,8 +62,8 @@ namespace StockProjectTest
                     break;
             }
 
-        }
-        static void newPortfolio() //Method that makes a new Portfolio Class and saves it
+        } 
+        public static void newPortfolio() //Method that makes a new Portfolio Class and saves it
         {
             Console.Clear();
             string name = ""; //Starting string, later will be transfered to new class Portfolio
@@ -417,7 +417,7 @@ namespace StockProjectTest
 
                 }
             }
-        }
+        } //Method to allow the user to sell stock for it's worth and add money back to balance
         public static void search()
         {
             Console.Clear();
@@ -450,7 +450,7 @@ namespace StockProjectTest
 
             }
 
-        }
+        }  //Method to search for stocks and stock symbols, currently the api returns weird results
 
     }
 }
