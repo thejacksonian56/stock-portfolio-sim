@@ -28,6 +28,28 @@ namespace StockProjectTest
 
         
     }
+    public class result
+    {
+        public string description;
+        public string displaySymbol;
+        public string symbol;
+        public string type;
+
+        public result()
+        {
+
+        }
+    }
+    public class StockSymbolQueryResults
+    {
+        public string count;
+        public result[] result;
+
+        public StockSymbolQueryResults()
+        {
+           
+        }
+    }
     public class Stock //Version of stock that only reflects the user's ownership of shares
     {
         public string symbol; //The stock symbol, acts as an identifier
