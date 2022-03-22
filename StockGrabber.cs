@@ -13,8 +13,9 @@ namespace StockProjectTest
     {
 
         public bool stockFound; //Becomes false if no information was able to be pulled
-
         public StockAvailable temp; //Temporary instance of StockAvailable for the use of methods below. See Stock.cs for attributes
+
+
         public async Task getInfo(string symb) //Task for pulling updated information on a specific stock through a stock symbol and the FinnHub API
         {
             HttpClient reader = new HttpClient(); 
@@ -66,7 +67,7 @@ namespace StockProjectTest
             
 
         }
-        public async Task searchSyb(string query)
+        public async Task searchSyb(string query)  //Task for pulling information on a stock query and listing the results
         {
             int x = 0;
             HttpClient reader = new HttpClient();
@@ -75,7 +76,7 @@ namespace StockProjectTest
             Console.WriteLine("Count: " + info.count);
             Console.WriteLine("Results: ");
             Console.WriteLine();
-            while (x < Convert.ToInt32(info.count) & x <= 5)
+            while (x < Convert.ToInt32(info.count) & x <= 5) //Prints out the top 5 query results
             {
                 Console.WriteLine(info.result[x].description);
                 Console.WriteLine(info.result[x].displaySymbol);
@@ -83,7 +84,7 @@ namespace StockProjectTest
                 x++;
                 Console.WriteLine();
             }
-        }
+        } 
         
         
         
