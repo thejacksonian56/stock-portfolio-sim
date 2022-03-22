@@ -197,7 +197,7 @@ namespace StockProjectTest
             }
             switch (response){
                 case 1:
-                    searchStock();
+                    search();
                     break;
                 case 2:
                     sellStock();
@@ -218,13 +218,12 @@ namespace StockProjectTest
         }
         public static void searchStock() //Allows the user to search for stock by it's symbol, and buy shares from that stock
         {
-            Console.Clear();
             StockGrabber finder = new StockGrabber(); //See StockGrabber.cs for functionality
             Console.WriteLine("Enter the Symbol of the Stock That You Would Like to Check");
             Console.WriteLine();
             string response = Console.ReadLine();
             finder.getInfo(response); //See StockGrabber.cs for functionality
-            System.Threading.Thread.Sleep(100); //Waits for 1.5 seconds, allows for above task to finish
+            System.Threading.Thread.Sleep(1500); //Waits for 1.5 seconds, allows for above task to finish
             if (finder.stockFound == true) //Checks to see if the method returned in no stock information being pulled
             {
                 Console.WriteLine();
@@ -286,7 +285,8 @@ namespace StockProjectTest
                     
                     break; 
                 case 2:
-                    searchStock();
+                    Console.Clear();
+                    search();
                     break;
                 case 3:
                     portfolioOverview();
@@ -328,7 +328,7 @@ namespace StockProjectTest
             }
             open.stocksOwned = temp.GroupBy(x => x.symbol).Select(x => x.First()).ToList(); //Removes duplicate entries of stock under the same symbol now that the correct shares owned is reflected acordingly
             finder.refreshInfo(open.stocksOwned); //See StockGrabber.cs for functionality
-            System.Threading.Thread.Sleep(5000); //Waits 5 secons for the above method to complete
+            System.Threading.Thread.Sleep(2000); //Waits 2 secons for the above method to complete
             open.PortValue = 0.00; //Sets the portfolio value to 0 to prevent the new value stacking ontop of the old one
             open.PortGain = 0.00;
             open.TotalInvested = 0.00;
@@ -417,6 +417,39 @@ namespace StockProjectTest
 
                 }
             }
+        }
+        public static void search()
+        {
+            Console.Clear();
+            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("1. Search for symbol  2. Type in symbol manually  3. Go Back");
+            int response = Convert.ToInt32(Console.ReadLine());
+            switch (response){
+                case 1:
+                    Console.Clear();
+                    StockGrabber grabber = new StockGrabber();
+                    Console.WriteLine("Search: ");
+                    string responseTwo = Console.ReadLine();
+                    grabber.searchSyb(responseTwo);
+                    System.Threading.Thread.Sleep(3000);
+                    Console.WriteLine();
+                    searchStock();
+                    break;
+                case 2:
+                    Console.Clear();
+                    searchStock();
+                    break;
+                case 3:
+                    portfolioOverview();
+                    break;
+                default:
+                    Console.WriteLine("Sorry, that's not a valid option! Press enter to try again");
+                    Console.ReadLine();
+                    search();
+                    break;
+
+            }
+
         }
 
     }

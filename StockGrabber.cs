@@ -66,6 +66,24 @@ namespace StockProjectTest
             
 
         }
+        public async Task searchSyb(string query)
+        {
+            int x = 0;
+            HttpClient reader = new HttpClient();
+            string response = await reader.GetStringAsync("https://finnhub.io/api/v1/search?q=" + query + "&token=" + Program.apiKey);
+            StockSymbolQueryResults info = JsonConvert.DeserializeObject<StockSymbolQueryResults>(response);
+            Console.WriteLine("Count: " + info.count);
+            Console.WriteLine("Results: ");
+            Console.WriteLine();
+            while (x < Convert.ToInt32(info.count) & x <= 5)
+            {
+                Console.WriteLine(info.result[x].description);
+                Console.WriteLine(info.result[x].displaySymbol);
+                Console.WriteLine(info.result[x].type);
+                x++;
+                Console.WriteLine();
+            }
+        }
         
         
         
