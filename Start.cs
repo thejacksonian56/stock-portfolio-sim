@@ -11,16 +11,11 @@ namespace StockProjectTest
 {
     class Program
     {
-        public static Portfolio open = new Portfolio();
-        public static string apiKey;
-        public static StockAvailable temp = new StockAvailable();
+        public static Portfolio open = new Portfolio(); //Opens a blank Portfolio that holds either new or loaded data later in the program.
+        public static StockAvailable temp = new StockAvailable(); //Opens blank StockAvailable that gets filled with information in searchStock()
         static void Main(string[] args) //Program start
         {
-            //Console.WriteLine("Enter API Key from FinnHub.io: ");
-            apiKey = "c8npoj2ad3iep4jec1lg"; //Temporary for testing, final product will ask user for own key
             Start();
-            
-            
         } 
         public static void Start() //The opening menu for the program once the API key is inserted
         {
@@ -68,6 +63,7 @@ namespace StockProjectTest
             Console.Clear();
             string name = ""; //Starting string, later will be transfered to new class Portfolio
             double balance = 0.00; //Starting double, later will be transfered to new class Portfolio 
+            string apiKey = "";
             bool validName=false; //Becomes true if making a name didn't cause an error
             bool validBalance=false; //Becomes true if making a starting balance didn't cause an error
             do //Loops here if either name or balance reached an error. Probably Redundant but haven't tested
@@ -107,7 +103,9 @@ namespace StockProjectTest
                     }
                 } while (validBalance == false);
             } while (validName == false && validBalance == false); //Checks both name and balance for errors. Probably redundent but haven't tested yet
-            open = new Portfolio(name, balance); //Creates new Portfolio Class. See Portfolio.cs
+            Console.WriteLine("Enter API key from Finnhub.io (You can register for a free account if you don't already have one): ");
+            apiKey = Console.ReadLine(); //Sets user specific API key for calling information with the Finnhub.io stock API
+            open = new Portfolio(name, balance, apiKey); //Creates new Portfolio Class. See Portfolio.cs
             open.Save(); //Saves new Portfolio class to a .xml document located in /MyDocuments/(name).xml -- See Portfolio.cs for more information
             Console.WriteLine("Congradulations! Your Portfolio has been created and saved!");
             Console.WriteLine("Press any key to continue to the dashboard");
@@ -164,7 +162,7 @@ namespace StockProjectTest
             }
             Console.WriteLine("Stocks Owned: ");
             Console.WriteLine(" ");
-            foreach (Stock x in open.stocksOwned)
+            foreach (Stock x in open.stocksOwned)  //Loop checks information of each stock in the portfolio and prints it to the console
             {
                 Console.Write("Stock {0}, Shares: {1}, Value: {2}, Amount Invested: {3}, Gain: ",x.symbol, x.sharesOwned, Math.Round(x.value, 2), Math.Round(x.valueAtPurchase, 2));
                 if(x.gain > 0) //< -----Checks to see if growth is positive or negative
@@ -367,21 +365,21 @@ namespace StockProjectTest
 
 
         }
-        public static void sellStock()
+        public static void sellStock()  //Method to allow the user to sell stock for it's worth and add money back to balance
         {
             Console.WriteLine("Enter the symbol of the stock you want to sell");
             string response = Console.ReadLine();
-            foreach(Stock x in open.stocksOwned)
+            foreach(Stock x in open.stocksOwned) //Loop goes through portfolio and finds the correct symbol of the stock the user wants to sell
             {
                 if (x.symbol == response)
                 {
                     Console.WriteLine("How much would you like to sell? ($)");
                     float sellPrice = float.Parse(Console.ReadLine());
-                    if (x.value >= sellPrice)
+                    if (x.value >= sellPrice) //Checks to see the user isn't trying to sell more than what they own
                     {
-                        float sellRatio = sellPrice / x.value;
-                        float sellShares = x.sharesOwned * sellRatio;
-                        float remainingShares = x.sharesOwned - sellShares;
+                        float sellRatio = sellPrice / x.value; //Finds the ratio of the value of the sale and the full value of all of that specific stock owned by the user
+                        float sellShares = x.sharesOwned * sellRatio; //Uses the ratio above to find the number of shares being sold from the users portfolio
+                        float remainingShares = x.sharesOwned - sellShares; //Finds how much shares will be left over after the sale
                         Console.WriteLine("You are about to sell {0}$ worth of {1} stock. You will have {2} shares left after this transaction. Continue? Y or N", sellPrice, x.symbol, remainingShares);
                         char resp = Convert.ToChar(Console.ReadLine());
                         switch (resp)
@@ -417,8 +415,8 @@ namespace StockProjectTest
 
                 }
             }
-        } //Method to allow the user to sell stock for it's worth and add money back to balance
-        public static void search()
+        }
+        public static void search() //Method to allow the user to search for stock symbols. Currently the results are not ideal due to bugged API return
         {
             Console.Clear();
             Console.WriteLine("What would you like to do?");
@@ -430,7 +428,7 @@ namespace StockProjectTest
                     StockGrabber grabber = new StockGrabber();
                     Console.WriteLine("Search: ");
                     string responseTwo = Console.ReadLine();
-                    grabber.searchSyb(responseTwo);
+                    grabber.searchSyb(responseTwo); //See StockGrabber.cs for functionality
                     System.Threading.Thread.Sleep(3000);
                     Console.WriteLine();
                     searchStock();
@@ -450,7 +448,7 @@ namespace StockProjectTest
 
             }
 
-        }  //Method to search for stocks and stock symbols, currently the api returns weird results
+        }  
 
     }
 }

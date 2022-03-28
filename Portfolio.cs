@@ -58,13 +58,16 @@ namespace StockProjectTest
 
         public double TotalInvested { get => _totalInvested; set => _totalInvested = value; } //The total amount of money the user has invested in stock
 
-        public Portfolio(string name, double balance)
+        public string apiKey; //Finnhub API key for calling stock information. 
+
+        public Portfolio(string name, double balance, string apiKey_)
         {
             Name = name;
             Balance = balance;
             PortValue = 0.00;
             PortGain = 0.00;
             TotalInvested = 0.00;
+            apiKey = apiKey_;
         }
         public Portfolio()
         {

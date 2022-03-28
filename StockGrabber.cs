@@ -19,7 +19,7 @@ namespace StockProjectTest
         public async Task getInfo(string symb) //Task for pulling updated information on a specific stock through a stock symbol and the FinnHub API
         {
             HttpClient reader = new HttpClient(); 
-            string _response = await reader.GetStringAsync("https://finnhub.io/api/v1/quote?symbol=" + symb + "&token=" + Program.apiKey); //Grabs data from the API using the symbol given at method called and key given at program startup
+            string _response = await reader.GetStringAsync("https://finnhub.io/api/v1/quote?symbol=" + symb + "&token=" + Program.open.apiKey); //Grabs data from the API using the symbol given at method called and key given at program startup
             StockAvailable temp = JsonConvert.DeserializeObject<StockAvailable>(_response); //Deserializes the data from the API and inserts it in the temp instance of StockAvailable. See Stock.cs for attributes
             if (temp != null)
             {
@@ -59,7 +59,7 @@ namespace StockProjectTest
             HttpClient reader = new HttpClient();
             foreach(Stock x in stocks) //Loop to go through each stock in the given list
             {
-                string response = await reader.GetStringAsync("https://finnhub.io/api/v1/quote?symbol=" + x.symbol + "&token=" + Program.apiKey); //Grabs data from the API using the symbol of the stock the loop is on and key given at program startup
+                string response = await reader.GetStringAsync("https://finnhub.io/api/v1/quote?symbol=" + x.symbol + "&token=" + Program.open.apiKey); //Grabs data from the API using the symbol of the stock the loop is on and key given at program startup
                 temp = JsonConvert.DeserializeObject<StockAvailable>(response); //Deserializes the data from the API and inserts it in the temp instance of StockAvailable. See Stock.cs for attributes
                 x.sharePrice = temp.c;                  //Sets the current stock price per share
                 x.value = x.sharePrice * x.sharesOwned; //Modifies the value of shares to reflect its updated value
@@ -71,7 +71,7 @@ namespace StockProjectTest
         {
             int x = 0;
             HttpClient reader = new HttpClient();
-            string response = await reader.GetStringAsync("https://finnhub.io/api/v1/search?q=" + query + "&token=" + Program.apiKey);
+            string response = await reader.GetStringAsync("https://finnhub.io/api/v1/search?q=" + query + "&token=" + Program.open.apiKey);
             StockSymbolQueryResults info = JsonConvert.DeserializeObject<StockSymbolQueryResults>(response);
             Console.WriteLine("Count: " + info.count);
             Console.WriteLine("Results: ");
